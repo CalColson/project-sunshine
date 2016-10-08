@@ -123,7 +123,8 @@ public class ForecastFragment extends Fragment {
             String format = "json";
             String units = "metric";
             int numDays = 16;
-            String key = "741b40069a3c6fa5e27859d3d99da97e";
+            String key;
+            //api key is initialized below, but omitted in GitHub for security purposes
 
             try {
                 // Construct the URL for the OpenWeatherMap query
