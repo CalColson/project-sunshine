@@ -6,7 +6,7 @@
         android:title="@string/pref_location_label"
         android:key="@string/pref_location_key"
         android:defaultValue="@string/pref_location_default"
-        android:inputType="text"
+        android:inputType="number"
         android:singleLine="true"/>
 
     <ListPreference

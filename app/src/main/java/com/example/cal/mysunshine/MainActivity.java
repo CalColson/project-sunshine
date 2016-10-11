@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity {
+    String mLocation;
+    final static String FORECASTFRAGMENT_TAG = "forecast_fragment";
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     @Override
@@ -19,10 +21,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mLocation = Utility.getPreferredLocation(this);
+
         //added from starter code
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -33,6 +37,19 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String curLocation = Utility.getPreferredLocation(this);
+        if (!curLocation.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager()
+                    .findFragmentByTag(FORECASTFRAGMENT_TAG);
+            ff.onLocationChanged();
+            mLocation = curLocation;
+        }
     }
 
     @Override
