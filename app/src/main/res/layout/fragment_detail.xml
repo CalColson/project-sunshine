@@ -16,12 +16,18 @@
             android:id="@+id/detail_day_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="24sp"
+            android:textColor="@color/black"
             android:text="Tomorrow" />
 
         <TextView
             android:id="@+id/detail_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="16sp"
+            android:textColor="@color/textGray"
             android:text="October 13" />
 
         <LinearLayout
@@ -41,13 +47,21 @@
                     android:id="@+id/detail_high_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="high" />
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="96sp"
+                    android:textColor="@color/black"
+                    android:text="22" />
 
                 <TextView
                     android:id="@+id/detail_low_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="low" />
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="48sp"
+                    android:textColor="@color/textGray"
+                    android:layout_marginTop="-12dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="12" />
 
             </LinearLayout>
 
@@ -67,6 +81,9 @@
                     android:id="@+id/detail_forecast_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textColor="@color/textGray"
                     android:text="description" />
 
             </LinearLayout>
@@ -76,6 +93,9 @@
             android:id="@+id/detail_humidity_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/black"
             android:text="humidity" />
 
         <!-- the negative margin is a quick hack to fix an extra space
@@ -85,12 +105,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-4dp"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/black"
             android:text="wind" />
 
         <TextView
             android:id="@+id/detail_pressure_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/black"
             android:text="pressure" />
 
     </LinearLayout>

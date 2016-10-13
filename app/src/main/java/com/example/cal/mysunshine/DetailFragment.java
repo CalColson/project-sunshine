@@ -155,6 +155,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mHolder.highTempView.setText(high);
         mHolder.lowTempView.setText(low);
         mHolder.iconView.setImageResource(image);
+        mHolder.iconView.setContentDescription(weatherDescription);
         mHolder.descriptionView.setText(weatherDescription);
         mHolder.humidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
         mHolder.windView.setText(Utility.getFormattedWind(getActivity(), windSpeed, windDir));

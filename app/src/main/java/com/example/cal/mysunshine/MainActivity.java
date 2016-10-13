@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                         .commit();
             }
         }
-        else mTwoPane = false;
+        else {
+            mTwoPane = false;
+            //getSupportActionBar().setElevation(0f);
+        }
 
         ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast);

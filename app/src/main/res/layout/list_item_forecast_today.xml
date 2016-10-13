@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:background="@drawable/touch_selector"
+    android:background="@color/sunshine_blue"
     android:padding="16dp">
 
     <LinearLayout
@@ -14,43 +14,57 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:paddingLeft="44dp">
 
         <TextView
             android:id="@+id/list_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/white"
             android:text="Date"/>
 
         <TextView
             android:id="@+id/list_item_high_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="High"/>
+            android:fontFamily="sans-serif-light"
+            android:textSize="72sp"
+            android:textColor="@color/white"
+            android:text="22"/>
 
         <TextView
             android:id="@+id/list_item_low_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Low"/>
+            android:fontFamily="sans-serif-light"
+            android:textSize="36sp"
+            android:textColor="@color/white"
+            android:paddingLeft="6dp"
+            android:text="12"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/list_item_icon"
-            android:layout_width="match_parent"
-            android:layout_height="118dp"/>
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
 
         <TextView
             android:id="@+id/list_item_forecast_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/white"
+            android:paddingTop="16dp"
             android:text="Forecast String"/>
     </LinearLayout>
 </LinearLayout>
