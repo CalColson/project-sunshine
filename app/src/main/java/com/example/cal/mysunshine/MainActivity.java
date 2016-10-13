@@ -11,9 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
     String mLocation;
-    final static String FORECASTFRAGMENT_TAG = "forecast_fragment";
+    boolean mTwoPane;
+    final static String DETAILFRAGMENT_TAG = "DFTAG";
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     @Override
@@ -22,13 +23,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mLocation = Utility.getPreferredLocation(this);
+        if (findViewById(R.id.weather_detail_container) != null) {
+            mTwoPane = true;
 
-        //added from starter code
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
-                    .commit();
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailFragment(),
+                                DETAILFRAGMENT_TAG)
+                        .commit();
+            }
         }
+        else mTwoPane = false;
+
+        ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast);
+        forecastFragment.setUseTodayLayout(!mTwoPane);
     }
 
 
@@ -46,8 +55,12 @@ public class MainActivity extends AppCompatActivity {
         String curLocation = Utility.getPreferredLocation(this);
         if (!curLocation.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment) getSupportFragmentManager()
-                    .findFragmentByTag(FORECASTFRAGMENT_TAG);
+                    .findFragmentById(R.id.fragment_forecast);
             ff.onLocationChanged();
+
+            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (df != null) df.onLocationChanged(curLocation);
+
             mLocation = curLocation;
         }
     }
@@ -86,5 +99,26 @@ public class MainActivity extends AppCompatActivity {
         intent.setData(geolocation);
         if (intent.resolveActivity(getPackageManager()) != null) startActivity(intent);
         else Log.d(LOG_TAG, "Couldn't call " + location);
+    }
+
+    @Override
+    public void onItemSelected(Uri dateUri) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, dateUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        }
+
+        else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.setData(dateUri);
+            startActivity(intent);
+        }
     }
 }
