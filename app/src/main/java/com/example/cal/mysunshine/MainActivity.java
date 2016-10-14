@@ -10,9 +10,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.cal.mysunshine.sync.SunshineSyncAdapter;
+
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
     String mLocation;
+    String mUnits;
     boolean mTwoPane;
     final static String DETAILFRAGMENT_TAG = "DFTAG";
 
@@ -23,6 +26,10 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         setContentView(R.layout.activity_main);
 
         mLocation = Utility.getPreferredLocation(this);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUnits = pref.getString(getString(R.string.pref_units_key),
+                getString(R.string.pref_units_metric));
+
         if (findViewById(R.id.weather_detail_container) != null) {
             mTwoPane = true;
 
@@ -41,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast);
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
 
@@ -56,7 +65,11 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         super.onResume();
 
         String curLocation = Utility.getPreferredLocation(this);
-        if (!curLocation.equals(mLocation)) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String curUnits = pref.getString(getString(R.string.pref_units_key),
+                getString(R.string.pref_units_metric));
+
+        if (!curLocation.equals(mLocation) || !curUnits.equals(mUnits)) {
             ForecastFragment ff = (ForecastFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.fragment_forecast);
             ff.onLocationChanged();
@@ -65,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             if (df != null) df.onLocationChanged(curLocation);
 
             mLocation = curLocation;
+            mUnits = curUnits;
         }
     }
 

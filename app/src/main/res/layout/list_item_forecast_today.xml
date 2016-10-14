@@ -52,6 +52,16 @@
         android:orientation="vertical"
         android:gravity="center">
 
+        <TextView
+            android:id="@+id/list_item_city_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/white"
+            android:paddingBottom="16dp"
+            android:text="St. Paul"/>
+
         <ImageView
             android:id="@+id/list_item_icon"
             android:layout_width="100dp"

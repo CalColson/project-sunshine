@@ -92,6 +92,11 @@ public class ForecastAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         int viewType = getItemViewType(cursor.getPosition());
 
+        if (viewType == VIEW_TYPE_TODAY) {
+            String cityName = cursor.getString(ForecastFragment.COL_CITY_NAME);
+            viewHolder.cityView.setText(cityName);
+        }
+
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
         int image;
 
@@ -122,6 +127,7 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     public static class ViewHolder {
+        public final TextView cityView;
         public final ImageView iconView;
         public final TextView dateView;
         public final TextView descriptionView;
@@ -129,6 +135,7 @@ public class ForecastAdapter extends CursorAdapter {
         public final TextView lowTempView;
 
         public ViewHolder(View view) {
+            cityView = (TextView) view.findViewById(R.id.list_item_city_textview);
             iconView = (ImageView) view.findViewById(R.id.list_item_icon);
             dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
             descriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);

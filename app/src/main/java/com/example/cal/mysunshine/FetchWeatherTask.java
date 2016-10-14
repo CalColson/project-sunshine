@@ -268,6 +268,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         int numDays = 14;
         String key;
         //api key is initialized below, but omitted in GitHub for security purposes
+        //api key is initialized above, but omitted in GitHub for security purposes
 
 
         try {

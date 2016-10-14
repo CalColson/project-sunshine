@@ -1,5 +1,7 @@
 package com.example.cal.mysunshine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +30,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.cal.mysunshine.data.WeatherContract;
+import com.example.cal.mysunshine.service.SunshineService;
+import com.example.cal.mysunshine.sync.SunshineSyncAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +68,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
             WeatherContract.LocationEntry.COLUMN_COORD_LAT,
-            WeatherContract.LocationEntry.COLUMN_COORD_LONG};
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG,
+            WeatherContract.LocationEntry.COLUMN_CITY_NAME};
 
     static final int COL_WEATHER_ID = 0;
     static final int COL_WEATHER_DATE = 1;
@@ -74,6 +80,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_WEATHER_CONDITION_ID = 6;
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
+    static final int COL_CITY_NAME = 9;
 
     public ForecastFragment() {
     }
@@ -174,9 +181,24 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        FetchWeatherTask task = new FetchWeatherTask(getActivity());
-        String locationSetting = Utility.getPreferredLocation(getActivity());
-        task.execute(locationSetting);
+        //String locationSetting = Utility.getPreferredLocation(getActivity());
+
+        //Asynctask implementation
+
+        //FetchWeatherTask task = new FetchWeatherTask(getActivity());
+        //task.execute(locationSetting);
+
+        //Service (with alarm) implementation
+
+        //Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        //alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, locationSetting);
+        //PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent,
+        //        PendingIntent.FLAG_ONE_SHOT);
+        //AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        //am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 500, pi);
+
+        //SyncAdapter implementation
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
