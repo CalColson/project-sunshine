@@ -1,12 +1,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.cal.mysunshine"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditTextPreference
+    <com.example.cal.mysunshine.LocationEditTextPreference
         android:title="@string/pref_location_label"
         android:key="@string/pref_location_key"
         android:defaultValue="@string/pref_location_default"
         android:inputType="number"
+        android:singleLine="true"
+        custom:minLength="3"/>
+
+    <EditTextPreference
+        android:title="@string/pref_country_label"
+        android:key="@string/pref_country_key"
+        android:defaultValue="@string/pref_country_default"
+        android:inputType="text"
         android:singleLine="true"/>
 
     <ListPreference
