@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "889058748574",
+    "firebase_url": "https://gcm-practice-147414.firebaseio.com",
+    "project_id": "gcm-practice-147414",
+    "storage_bucket": "gcm-practice-147414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889058748574:android:b32495ba3c50c292",
+        "android_client_info": {
+          "package_name": "com.example.cal.mysunshine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889058748574-5t9fedp80bvambeelrh3pt909a2t41q1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhsvOlYbFItLoJnHR3N8opLC6IVQmqMJk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

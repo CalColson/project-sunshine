@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.cal.mysunshine.data.WeatherContract;
 
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -154,7 +155,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mHolder.dateView.setText(Utility.getFormattedMonthDay(getActivity(), date));
         mHolder.highTempView.setText(high);
         mHolder.lowTempView.setText(low);
-        mHolder.iconView.setImageResource(image);
+        //mHolder.iconView.setImageResource(image);
+        //Log.v(LOG_TAG, Utility.getArtUrlForWeatherCondition(getActivity(), weatherId));
+        Glide.with(this)
+                .load(Utility.getArtUrlForWeatherCondition(getActivity(), weatherId))
+                .error(Utility.getArtResourceForWeatherCondition(weatherId))
+                .crossFade()
+                .into(mHolder.iconView);
         mHolder.iconView.setContentDescription(weatherDescription);
         mHolder.descriptionView.setText(weatherDescription);
         mHolder.humidityView.setText(getActivity().getString(R.string.format_humidity, humidity));

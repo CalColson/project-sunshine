@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.cal.mysunshine.data.WeatherContract;
 
 /**
@@ -98,11 +99,16 @@ public class ForecastAdapter extends CursorAdapter {
         }
 
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
-        int image;
+        int fallbackIconId;
 
-        if (viewType == VIEW_TYPE_TODAY) image = Utility.getArtResourceForWeatherCondition(weatherId);
-        else image = Utility.getIconResourceForWeatherCondition(weatherId);
-        viewHolder.iconView.setImageResource(image);
+        if (viewType == VIEW_TYPE_TODAY) fallbackIconId = Utility.getArtResourceForWeatherCondition(weatherId);
+        else fallbackIconId = Utility.getIconResourceForWeatherCondition(weatherId);
+        //viewHolder.iconView.setImageResource(image);
+        Glide.with(mContext)
+                .load(Utility.getArtUrlForWeatherCondition(mContext, weatherId))
+                .error(fallbackIconId)
+                .crossFade()
+                .into(viewHolder.iconView);
 
         // Read date from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);

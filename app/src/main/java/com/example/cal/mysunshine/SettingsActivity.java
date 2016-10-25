@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.example.cal.mysunshine.data.WeatherContract;
 import com.example.cal.mysunshine.sync.SunshineSyncAdapter;
@@ -40,6 +42,7 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_country_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_art_pack_key)));
         //unnecessary
         //bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_enable_notifications_key)));
     }
@@ -92,6 +95,8 @@ public class SettingsActivity extends PreferenceActivity
         }
 
         else if (key.equals(getString(R.string.pref_location_key))) {
+            //SunshineSyncAdapter.syncImmediately(this);
+
             @SunshineSyncAdapter.LocationStatus int status = Utility.getLocationStatus(this);
             switch (status) {
                 case SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN:
@@ -112,6 +117,8 @@ public class SettingsActivity extends PreferenceActivity
         return true;
     }
 
+
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_location_key)) ||
@@ -120,6 +127,9 @@ public class SettingsActivity extends PreferenceActivity
             SunshineSyncAdapter.syncImmediately(this);
         }
         else if (key.equals(getString(R.string.pref_units_key))) {
+            getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+        }
+        else if (key.equals(getString(R.string.pref_art_pack_key))) {
             getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
         }
     }
