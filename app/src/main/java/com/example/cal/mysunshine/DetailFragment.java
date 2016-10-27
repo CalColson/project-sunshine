@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.example.cal.mysunshine.data.WeatherContract;
 
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+    static final String DETAIL_TRANSITION_ANIMATION = "DTA";
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
     static final String DETAIL_URI = "URI";
 
@@ -33,6 +35,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     ShareActionProvider mShareActionProvider;
     private ViewHolder mHolder;
     private Uri mUri;
+    private boolean mTransitionANimation;
 
     private static final int DETAIL_LOADER = 0;
 
@@ -95,6 +98,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Bundle arguments = getArguments();
         if (arguments != null) {
             mUri = arguments.getParcelable(DETAIL_URI);
+            mTransitionANimation = arguments.getBoolean(DETAIL_TRANSITION_ANIMATION, false);
         }
 
         return rootView;
@@ -151,8 +155,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String dateString = Utility.formatDate(date);
         mForecastStr = String.format("%s - %s - %s/%s", dateString, weatherDescription, high, low);
 
-        mHolder.friendlyDateView.setText(Utility.getDayName(getActivity(), date));
-        mHolder.dateView.setText(Utility.getFormattedMonthDay(getActivity(), date));
+        mHolder.friendlyDateView.setText(Utility.getDayName(getActivity(), date) + ", " +
+                Utility.getFormattedMonthDay(getActivity(), date));
+        //mHolder.dateView.setText(Utility.getFormattedMonthDay(getActivity(), date));
         mHolder.highTempView.setText(high);
         mHolder.lowTempView.setText(low);
         //mHolder.iconView.setImageResource(image);
@@ -170,6 +175,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         if (mShareActionProvider != null)
             mShareActionProvider.setShareIntent(createShareForecastIntent());
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (mTransitionANimation) activity.supportStartPostponedEnterTransition();
     }
 
     @Override

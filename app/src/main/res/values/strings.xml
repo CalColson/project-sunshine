@@ -17,6 +17,8 @@
     <string name="empty_forecast_list_server_error">No weather information available. The server is not returning valid data. Please check for an updated version of Cal\'s Sunshine</string>
     <string name="empty_forecast_list_invalid_location">No weather information available. The location in settings is not recognized by the server.</string>
 
+    <string name="detail_icon_transition_name">TN_detail_icon</string>
+
     <string name="pref_location_status_key">location_status</string>
 
     <!-- Strings used when displaying the state of the Location in settings -->
@@ -24,6 +26,10 @@
     <string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
 
     <!-- Strings for formatting weather-related data -->
+    <string name="wind">Wind</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+
     <!-- Temperature format [CHAR LIMIT=5] -->
     <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
 
