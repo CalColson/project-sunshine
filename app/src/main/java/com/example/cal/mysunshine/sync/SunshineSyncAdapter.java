@@ -38,6 +38,7 @@ import com.example.cal.mysunshine.MainActivity;
 import com.example.cal.mysunshine.R;
 import com.example.cal.mysunshine.Utility;
 import com.example.cal.mysunshine.data.WeatherContract;
+import com.example.cal.mysunshine.muzei.WeatherMuzeiSource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +61,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     //public static final int SYNC_INTERVAL = 30;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
     public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
+    public static final String ACTION_DATA_UPDATED = "com.example.cal.mysunshine.ACTION_DATA_UPDATED";
 
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final long MIN_IN_MILLIS = 1000 * 60;
@@ -137,9 +139,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             if (Utility.isLocationAvailable(mContext)) {
                 builtUri.appendQueryParameter(LAT_PARAM, locationLatitude)
                         .appendQueryParameter(LON_PARAM, locationLongitude);
-            }
-
-            else builtUri.appendQueryParameter(QUERY_PARAM, locationQuery);
+            } else builtUri.appendQueryParameter(QUERY_PARAM, locationQuery);
 
             Uri uri = builtUri.appendQueryParameter(FORMAT_PARAM, format)
                     .appendQueryParameter(UNITS_PARAM, units)
@@ -573,6 +573,16 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     Boolean.parseBoolean(getContext().getString(R.string.pref_enable_notifications_default)));
             if (notify) notifyWeather();
 
+            //update the widgets
+            Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(mContext.getPackageName());
+            mContext.sendBroadcast(dataUpdatedIntent);
+
+            //update muzei
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Context context = getContext();
+                context.startService(new Intent(ACTION_DATA_UPDATED)
+                        .setClass(context, WeatherMuzeiSource.class));
+            }
 
             Log.d(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
 

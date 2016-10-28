@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mLocation = Utility.getPreferredLocation(this);
+        Uri contentUri = getIntent() != null ? getIntent().getData() : null;
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         mUnits = pref.getString(getString(R.string.pref_units_key),
                 getString(R.string.pref_units_metric));
@@ -50,9 +51,15 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             mTwoPane = true;
 
             if (savedInstanceState == null) {
+                DetailFragment fragment = new DetailFragment();
+                if (contentUri != null) {
+                    Bundle args = new Bundle();
+                    args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+                    fragment.setArguments(args);
+                }
+
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.weather_detail_container, new DetailFragment(),
-                                DETAILFRAGMENT_TAG)
+                        .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                         .commit();
             }
         }
