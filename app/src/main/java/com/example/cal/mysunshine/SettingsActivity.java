@@ -11,10 +11,18 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.cal.mysunshine.data.WeatherContract;
 import com.example.cal.mysunshine.sync.SunshineSyncAdapter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 
 /**
@@ -28,6 +36,9 @@ import com.example.cal.mysunshine.sync.SunshineSyncAdapter;
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    protected final static int PLACE_PICKER_REQUEST = 9090;
+    private ImageView mAttribution;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +56,14 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_art_pack_key)));
         //unnecessary
         //bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_enable_notifications_key)));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mAttribution = new ImageView(this);
+            mAttribution.setImageResource(R.drawable.powered_by_google_light);
+
+            if (!Utility.isLocationAvailable(this)) mAttribution.setVisibility(View.GONE);
+            setListFooter(mAttribution);
+        }
     }
 
     @Override
@@ -123,6 +142,14 @@ public class SettingsActivity extends PreferenceActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_location_key)) ||
                 key.equals(getString(R.string.pref_country_key))) {
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(getString(R.string.pref_location_latitude));
+            editor.remove(getString(R.string.pref_location_longitude));
+            editor.commit();
+
+            if (mAttribution != null) mAttribution.setVisibility(View.GONE);
+
             Utility.resetLocationStatus(this);
             SunshineSyncAdapter.syncImmediately(this);
         }
@@ -134,7 +161,39 @@ public class SettingsActivity extends PreferenceActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+               if (resultCode == RESULT_OK) {
+                   Place place = PlacePicker.getPlace(this, data);
+                   String address = place.getAddress().toString();
+                   LatLng latLong = place.getLatLng();
 
+                   if (TextUtils.isEmpty(address)) address = String.format("(%.2f, %.2f)",
+                           latLong.latitude, latLong.longitude);
+
+                   SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                   SharedPreferences.Editor editor = prefs.edit();
+                   editor.putString(getString(R.string.pref_location_key), address);
+                   editor.putFloat(getString(R.string.pref_location_latitude), (float) latLong.latitude);
+                   editor.putFloat(getString(R.string.pref_location_longitude), (float) latLong.longitude);
+                   editor.commit();
+
+                   Preference locationPreference = findPreference(getString(R.string.pref_location_key));
+                   locationPreference.setSummary(address);
+
+                   if (mAttribution != null) mAttribution.setVisibility(View.VISIBLE);
+                   else {
+                       View rootView = findViewById(android.R.id.content);
+                       Snackbar.make(rootView, getString(R.string.attribution_text), Snackbar.LENGTH_LONG).show();
+                   }
+
+                   Utility.resetLocationStatus(this);
+                   SunshineSyncAdapter.syncImmediately(this);
+               }
+        }
+        else super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override

@@ -35,6 +35,7 @@ public class Utility {
     // Format used for storing dates in the database.  ALso used for converting those strings
     // back into date objects for comparison/processing.
     public static final String DATE_FORMAT = "yyyyMMdd";
+    public static final float DEFAULT_LATLONG = 0F;
 
     /**
      * Helper method to convert the database representation of the date into something to display
@@ -125,6 +126,24 @@ public class Utility {
                 context.getString(R.string.pref_location_default)) + "," + prefs.getString(context.getString(R.string.pref_country_key),
                 context.getString(R.string.pref_country_default));
     }
+
+    public static boolean isLocationAvailable(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.contains(context.getString(R.string.pref_location_latitude)) &&
+                prefs.contains(context.getString(R.string.pref_location_longitude));
+    }
+
+    public static float getLocationLatitude(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getFloat(context.getString(R.string.pref_location_latitude), DEFAULT_LATLONG);
+    }
+
+    public static float getLocationLongitude(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getFloat(context.getString(R.string.pref_location_longitude), DEFAULT_LATLONG);
+    }
+
+
 
     public static boolean isMetric(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

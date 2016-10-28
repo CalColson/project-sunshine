@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +23,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            this end comment is used to suppress apikey in commit-->
+            this end comment is used to suppress apikey in commit, please replace with android:value
+            with apikey and then close the meta-data tag-->
 
         <activity
             android:name=".MainActivity"

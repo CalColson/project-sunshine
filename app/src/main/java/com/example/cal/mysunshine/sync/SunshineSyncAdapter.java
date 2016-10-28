@@ -31,6 +31,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.example.cal.mysunshine.DetailActivity;
 import com.example.cal.mysunshine.DetailFragment;
 import com.example.cal.mysunshine.MainActivity;
@@ -81,7 +82,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LOCATION_STATUS_OK, LOCATION_STATUS_SERVER_DOWN, LOCATION_STATUS_SERVER_INVALID,
             LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_INVALID})
-    public @interface LocationStatus{}
+    public @interface LocationStatus {
+    }
 
     public static final int LOCATION_STATUS_OK = 0;
     public static final int LOCATION_STATUS_SERVER_DOWN = 1;
@@ -98,6 +100,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(LOG_TAG, "onPerformSync Called at: " + System.currentTimeMillis());
 
         String locationQuery = Utility.getPreferredLocation(getContext());
+        String locationLatitude = String.valueOf(Utility.getLocationLatitude(mContext));
+        String locationLongitude = String.valueOf(Utility.getLocationLongitude(mContext));
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -122,20 +126,28 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             final String FORECAST_BASE_URL =
                     "http://api.openweathermap.org/data/2.5/forecast/daily?";
             final String QUERY_PARAM = "zip";
+            final String LAT_PARAM = "lat";
+            final String LON_PARAM = "lon";
             final String FORMAT_PARAM = "mode";
             final String UNITS_PARAM = "units";
             final String DAYS_PARAM = "cnt";
             final String KEY_PARAM = "appid";
 
-            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .appendQueryParameter(QUERY_PARAM, locationQuery)
-                    .appendQueryParameter(FORMAT_PARAM, format)
+            Uri.Builder builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon();
+            if (Utility.isLocationAvailable(mContext)) {
+                builtUri.appendQueryParameter(LAT_PARAM, locationLatitude)
+                        .appendQueryParameter(LON_PARAM, locationLongitude);
+            }
+
+            else builtUri.appendQueryParameter(QUERY_PARAM, locationQuery);
+
+            Uri uri = builtUri.appendQueryParameter(FORMAT_PARAM, format)
                     .appendQueryParameter(UNITS_PARAM, units)
                     .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
                     .appendQueryParameter(KEY_PARAM, key)
                     .build();
 
-            URL url = new URL(builtUri.toString());
+            URL url = new URL(uri.toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -149,8 +161,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 inputStream = urlConnection.getErrorStream();
                 Log.v(LOG_TAG, "http error: " + inputStream.toString());
                 setLocationStatus(getContext(), LOCATION_STATUS_INVALID);
-            }
-            else inputStream = urlConnection.getInputStream();
+            } else inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
@@ -337,8 +348,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                             .fitCenter()
                             .into(largeIconWidth, largeIconHeight)
                             .get();
-                }
-                catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     Log.e(LOG_TAG, "Error retrieving large icon from " + artUrl, e);
                     largeIcon = BitmapFactory.decodeResource(resources, artResourceId);
                 }
@@ -552,10 +562,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             // delete old data from database
-            String yesterdayDate = Long.toString(dayTime.setJulianDay(julianStartDay-1));
+            String yesterdayDate = Long.toString(dayTime.setJulianDay(julianStartDay - 1));
             getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
                     WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",
-                    new String[] {yesterdayDate});
+                    new String[]{yesterdayDate});
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
             String displayNotifKey = getContext().getString(R.string.pref_enable_notifications_key);
